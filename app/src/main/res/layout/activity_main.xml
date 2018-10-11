@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:text="Enter from value" />
+            android:hint="Enter from value"
+            android:inputType="numberDecimal" />
 
         <TextView
             android:id="@+id/fromUnitTextView"
@@ -58,8 +58,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="numberDecimal"
-            android:text="Enter to value" />
+            android:hint="Enter to value"
+            android:inputType="numberDecimal" />
 
         <TextView
             android:id="@+id/toUnitTextView"
