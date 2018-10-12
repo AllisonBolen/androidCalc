@@ -1,11 +1,14 @@
 package com.example.allisonbolen.calculatorandroid;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
+
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,35 +19,59 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //internal vars
-        final boolean modeVal = False; // false = length | true = volume
-
+        boolean[] modeVal = {false}; // false = length | true = volume
         // ui vars
         EditText fromTextBox = findViewById(R.id.fromEditText);
         final EditText toTextBox = findViewById(R.id.toEditText);
-        TextView fromView = findViewById(R.id.fromUnitTextView);
+        final TextView fromView = findViewById(R.id.fromUnitTextView);
         TextView toView = findViewById(R.id.toUnitTextView);
         Button calc = findViewById(R.id.button4);
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
+        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        mode.setOnClickListener(v -> {
-            modeVal = !modeVal;
+
+
+        clear.setOnClickListener(v -> {
+            fromTextBox.setText("");
+            toTextBox.setText("");
+            mgr.hideSoftInputFromWindow(toTextBox.getWindowToken(), 0);
+            mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
         });
 
-        calc.setOnClickListener(v -> {
-            int fromVal = Integer.parseInt(fromTextBox.getText().toString());
-            int toVal = Integer.parseInt(toTextBox.getText().toString());
-            UnitsConverter.VolumeUnits
-
-            // enum conversion
-
-            VolumeUnits from = VolumeUnits.valueOf();
-
-            if(modeVal){
-                //volume conversion
-                double lenVal = UnitsConverter.convert(VolumeUnits.Gallons,VolumeUnits.Liters,10.0)
-                toTextBox.setText(lenVal.toString());
+        // mode method
+        mode.setOnClickListener(v -> {
+            modeVal[0]= !modeVal[0];
+            if(modeVal[0]){
+                fromView.setText("Gallons");
+                toView.setText("Liters");
+            }else{
+                fromView.setText("Meters");
+                toView.setText("Yards");
             }
+        });
+
+        // calcualte method
+        calc.setOnClickListener(v -> {
+            double fromVal = Double.parseDouble(fromTextBox.getText().toString());
+
+            if(modeVal[0]){
+                //volume conversion = enum string conversion
+                VolumeUnits from = VolumeUnits.valueOf(fromView.getText().toString());
+                VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
+                // value conversion
+                double lenVal = UnitsConverter.convert(fromVal, from, to);
+                toTextBox.setText(String.valueOf(lenVal));
+            }
+            else{
+                LengthUnits from = LengthUnits.valueOf(fromView.getText().toString());
+                LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
+
+                double lenVal = UnitsConverter.convert(fromVal, from, to);
+                toTextBox.setText(String.valueOf(lenVal));
+            }
+            mgr.hideSoftInputFromWindow(toTextBox.getWindowToken(), 0);
+            mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
         });
 
     }
