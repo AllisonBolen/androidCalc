@@ -7,17 +7,36 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.*;
+
 
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
 
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
-    public static final int FROM_SELECTION = 1;
-    public static final int TO_SELECTION = 2;
-    //internal vars
-    public boolean[] modeVal = {false}; // false = length | true = volume
+    public static final int SELECTION = 1;
+    public static boolean[] modeVal = {false}; // false = length | true = volume
+    private String fromSelection = "Meters";
+    private String toSelection = "Yards";
+    private String tempFromS = "Liters";
+    private String tempToS = "Gallons";
+//    private String[] length = {"Meters", "Yards", "Miles"};
+//    private String[] volume = {"Liters", "Gallons", "Quarts"};
+
+    // ui vars
+    private EditText fromTextBox = findViewById(R.id.fromEditText);
+    private final EditText toTextBox = findViewById(R.id.toEditText);
+    private final TextView fromView = findViewById(R.id.fromUnitTextView);
+    private TextView toView = findViewById(R.id.toUnitTextView);
+    private Button calc = findViewById(R.id.button4);
+    private Button clear = findViewById(R.id.button5);
+    private Button mode = findViewById(R.id.button3);
+    private InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -31,28 +50,26 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.settings) {
             Toast.makeText(this, "Setting", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivityForResult(intent, SELECTION);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == SELECTION) {
+            fromSelection = data.getStringExtra("from_spinner");
+            toSelection = data.getStringExtra("to_spinner");
+            fromTextBox.setText(data.getStringExtra("from_spinner"));
+            toTextBox.setText(data.getStringExtra("to_spinner"));
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // ui vars
-        EditText fromTextBox = findViewById(R.id.fromEditText);
-        final EditText toTextBox = findViewById(R.id.toEditText);
-        final TextView fromView = findViewById(R.id.fromUnitTextView);
-        TextView toView = findViewById(R.id.toUnitTextView);
-        Button calc = findViewById(R.id.button4);
-        Button clear = findViewById(R.id.button5);
-        Button mode = findViewById(R.id.button3);
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-
 
         clear.setOnClickListener(v -> {
             fromTextBox.setText("");
@@ -65,12 +82,14 @@ public class MainActivity extends AppCompatActivity {
         mode.setOnClickListener(v -> {
             modeVal[0]= !modeVal[0];
             if(modeVal[0]){
-                fromView.setText("Gallons");
-                toView.setText("Liters");
+                fromView.setText(tempFromS);
+                toView.setText(tempToS);
             }else{
-                fromView.setText("Meters");
-                toView.setText("Yards");
+                fromView.setText(tempFromS);
+                toView.setText(tempToS);
             }
+            tempFromS = fromSelection;
+            tempToS = toSelection;
         });
 
         // calcualte method

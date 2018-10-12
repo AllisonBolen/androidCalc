@@ -2,16 +2,18 @@ package com.example.allisonbolen.calculatorandroid;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.*;
+import android.content.*;
 
 public class SettingsActivity extends AppCompatActivity {
 
     private String fromSelection = "Meters";
     private String toSelection = "Yards";
+    private boolean[] mode = MainActivity.modeVal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,18 +21,28 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent();
+                intent.putExtra("from_spinner", fromSelection);
+                intent.putExtra("to_spinner", toSelection);
+                setResult(MainActivity.SELECTION, intent);
+                finish();
             }
         });
 
         Spinner from_spinner = findViewById(R.id.from_spinner);
-        ArrayAdapter<CharSequence> fromAdapter = ArrayAdapter.createFromResource
-                (this, R.array.length, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> fromAdapter;
+        if(mode[0]) {
+            fromAdapter = ArrayAdapter.createFromResource
+                    (this, R.array.volume, android.R.layout.simple_spinner_item);
+        }
+        else{
+            fromAdapter = ArrayAdapter.createFromResource
+                    (this, R.array.length, android.R.layout.simple_spinner_item);
+        }
         fromAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         from_spinner.setAdapter(fromAdapter);
         from_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
