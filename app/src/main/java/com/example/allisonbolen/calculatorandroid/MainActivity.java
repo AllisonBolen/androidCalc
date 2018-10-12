@@ -14,6 +14,11 @@ import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int FROM_SELECTION = 1;
+    public static final int TO_SELECTION = 2;
+    //internal vars
+    public boolean[] modeVal = {false}; // false = length | true = volume
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -37,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //internal vars
-        boolean[] modeVal = {false}; // false = length | true = volume
         // ui vars
         EditText fromTextBox = findViewById(R.id.fromEditText);
         final EditText toTextBox = findViewById(R.id.toEditText);
