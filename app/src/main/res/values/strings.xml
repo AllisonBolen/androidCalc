@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">CalculatorAndroid</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="conversion_calculator">Conversion Calculator</string>
+    <string name="meters">Meters</string>
+    <string name="calculate">Calculate</string>
+    <string name="clear">Clear</string>
+    <string name="mode">Mode</string>
+    <string name="enter_from_value">Enter from value</string>
+    <string name="enter_to_value">Enter to value</string>
+    <string name="yards">Yards</string>
+    <string-array name="length">
+        <item>Meters</item>
+        <item>Yards</item>
+        <item>Miles</item>
+    </string-array>
+    <string-array name="volume">
+        <item>Liters</item>
+        <item>Gallons</item>
+        <item>Quarts</item>
+    </string-array>
+
 </resources>
