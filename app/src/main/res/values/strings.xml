@@ -20,5 +20,6 @@
         <item>Gallons</item>
         <item>Quarts</item>
     </string-array>
+    <string name="title_activity_settings">SettingsActivity</string>
 
 </resources>

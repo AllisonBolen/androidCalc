@@ -4,14 +4,33 @@ import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Button;
+import android.widget.*;
+import android.view.Menu;
+import android.view.MenuItem;
+
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
 
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 
 public class MainActivity extends AppCompatActivity {
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.settings) {
+            Toast.makeText(this, "Setting", Toast.LENGTH_LONG).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
