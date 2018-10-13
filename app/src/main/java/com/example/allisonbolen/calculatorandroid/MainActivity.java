@@ -1,8 +1,11 @@
 package com.example.allisonbolen.calculatorandroid;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +16,22 @@ import android.support.design.widget.Snackbar;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;// "true" means the menu should be visible
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            Intent intent = new Intent(MainActivity.this, Settings.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
