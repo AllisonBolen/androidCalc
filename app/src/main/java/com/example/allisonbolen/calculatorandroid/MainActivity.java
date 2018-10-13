@@ -1,15 +1,16 @@
 package com.example.allisonbolen.calculatorandroid;
 
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Button;
-import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
-
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
+import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
+import android.support.design.widget.Snackbar;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,26 +54,43 @@ public class MainActivity extends AppCompatActivity {
 
         // calcualte method
         calc.setOnClickListener(v -> {
-            double fromVal = Double.parseDouble(fromTextBox.getText().toString());
-
-            if(modeVal[0]){
-                //volume conversion = enum string conversion
-                VolumeUnits from = VolumeUnits.valueOf(fromView.getText().toString());
-                VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
-                // value conversion
-                double lenVal = UnitsConverter.convert(fromVal, from, to);
-                toTextBox.setText(String.valueOf(lenVal));
+            double fromVal = -1;
+            double toVal = -1;
+            // test for blank input
+            if(!fromTextBox.getText().toString().equals("")){
+                fromVal = Double.parseDouble(fromTextBox.getText().toString());
             }
-            else{
-                LengthUnits from = LengthUnits.valueOf(fromView.getText().toString());
-                LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
+            if(!toTextBox.getText().toString().equals("")){
+                toVal = Double.parseDouble(fromTextBox.getText().toString());
+            }
 
-                double lenVal = UnitsConverter.convert(fromVal, from, to);
-                toTextBox.setText(String.valueOf(lenVal));
+            System.out.print("From"+fromVal+", to"+toVal);
+
+            if(fromVal != -1 && toVal !=-1){// if htere are values in both fields you need to clear one
+                String error = "Clear the to field. I dont want to overwrite!!";
+                EditText view = findViewById(R.id.fromEditText);
+                Snackbar.make(view, error,  Snackbar.LENGTH_LONG).show();
+            }
+            else if(fromVal != -1) { // this is converting from value to to
+                if (modeVal[0]) {
+                    //volume conversion = enum string conversion
+                    VolumeUnits from = VolumeUnits.valueOf(fromView.getText().toString());
+                    VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
+                    // value conversion
+                    double lenVal = UnitsConverter.convert(fromVal, from, to);
+                    toTextBox.setText(String.valueOf(lenVal));
+                } else {
+                    LengthUnits from = LengthUnits.valueOf(fromView.getText().toString());
+                    LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
+
+                    double lenVal = UnitsConverter.convert(fromVal, from, to);
+                    toTextBox.setText(String.valueOf(lenVal));
+                }
+
             }
             mgr.hideSoftInputFromWindow(toTextBox.getWindowToken(), 0);
             mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
-        });
+            });
 
     }
 }
