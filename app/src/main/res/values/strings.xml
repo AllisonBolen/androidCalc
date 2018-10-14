@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">CalculatorAndroid</string>
+    <string name="title_activity_settings">Settings</string>
+
+
+        <string name="fromView">From</string>
+        <string name="toView">To</string>
+        <string name="fromHint">Enter a number</string>
+        <string name="toHint">Enter a number</string>
+        <string name="fromUnit">Meters</string>
+        <string name="toUnit">Miles</string>
+        <string name="clear">Clear</string>
+        <string name="calculate">Calculate</string>
+        <string name="mode">Mode</string>
+        <string-array name="length">
+            <item>Miles</item>
+            <item>Meters</item>
+            <item>Yards</item>
+        </string-array>
+        <string-array name="volume">
+            <item>Gallons</item>
+            <item>Quarts</item>
+            <item>Liters</item>
+        </string-array>
 </resources>
