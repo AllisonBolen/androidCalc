@@ -16,6 +16,11 @@ import android.support.design.widget.Snackbar;
 
 
 public class MainActivity extends AppCompatActivity {
+    // internal
+    public static final int SELECTION = 1;
+    public static boolean[] modeVal = {false}; // false = length | true = volume
+
+    // ui vars
 
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -26,8 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_logout) {
             Intent intent = new Intent(MainActivity.this, Settings.class);
-            startActivity(intent);
-            finish();
+            startActivityForResult(intent, SELECTION);
             return true;
         }
         return false;
@@ -37,10 +41,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //internal vars
-        boolean[] modeVal = {false}; // false = length | true = volume
-        // ui vars
         EditText fromTextBox = findViewById(R.id.fromEditText);
         final EditText toTextBox = findViewById(R.id.toEditText);
         final TextView fromView = findViewById(R.id.fromUnitTextView);
@@ -49,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-
 
         clear.setOnClickListener(v -> {
             fromTextBox.setText("");
@@ -110,6 +108,14 @@ public class MainActivity extends AppCompatActivity {
             mgr.hideSoftInputFromWindow(toTextBox.getWindowToken(), 0);
             mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
         });
-
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(resultCode == SELECTION){
+            TextView fromView = findViewById(R.id.fromUnitTextView);
+            TextView toView = findViewById(R.id.toUnitTextView);
+            fromView.setText(data.getStringArrayExtra("FROM_SEL")[0]);
+            toView.setText(data.getStringArrayExtra("TO_SEL")[0]);
+        }
     }
 }

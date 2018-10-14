@@ -12,5 +12,14 @@
         <string name="clear">Clear</string>
         <string name="calculate">Calculate</string>
         <string name="mode">Mode</string>
-
+        <string-array name="length">
+            <item>Miles</item>
+            <item>Meters</item>
+            <item>Yards</item>
+        </string-array>
+        <string-array name="volume">
+            <item>Gallons</item>
+            <item>Quarts</item>
+            <item>Liters</item>
+        </string-array>
 </resources>
