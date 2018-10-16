@@ -10,14 +10,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Conversion Calculator"
-        android:textAlignment="center" />
+        android:text="@string/conversion_calculator"
+        android:textAlignment="center"/>
 
     <TextView
         android:id="@+id/fromTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="From" />
+        android:text="@string/from"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,22 +30,22 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Enter from value"
-            android:inputType="numberDecimal" />
+            android:hint="@string/enter_from_value"
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:id="@+id/fromUnitTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Meters" />
+            android:text="@string/meters"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/toTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="From" />
+        android:text="@string/to" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,15 +58,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="Enter to value"
-            android:inputType="numberDecimal" />
+            android:hint="@string/enter_to_value"
+            android:inputType="numberDecimal"/>
 
         <TextView
             android:id="@+id/toUnitTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Yards" />
+            android:text="@string/yards"/>
     </LinearLayout>
 
     <LinearLayout
@@ -79,21 +79,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Calculate" />
+            android:text="@string/calculate" />
 
         <Button
             android:id="@+id/button5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Clear" />
+            android:text="@string/clear" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Mode" />
+            android:text="@string/mode" />
     </LinearLayout>
 
 </LinearLayout>

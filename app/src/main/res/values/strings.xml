@@ -2,17 +2,23 @@
     <string name="app_name">CalculatorAndroid</string>
     <string name="title_activity_settings">Settings</string>
 
-
         <string name="fromView">From</string>
         <string name="toView">To</string>
         <string name="fromHint">Enter a number</string>
         <string name="toHint">Enter a number</string>
         <string name="fromUnit">Meters</string>
         <string name="toUnit">Miles</string>
-        <string name="clear">Clear</string>
-        <string name="calculate">Calculate</string>
-        <string name="mode">Mode</string>
-        <string-array name="length">
+    <string name="conversion_calculator">Conversion Calculator</string>
+    <string name="enter_from_value">Enter from value</string>
+    <string name="enter_to_value">Enter to value</string>
+    <string name="meters">Meters</string>
+    <string name="yards">Yards</string>
+    <string name="to">To</string>
+    <string name="from">From</string>
+    <string name="calculate">Calculate</string>
+    <string name="mode">Mode</string>
+    <string name="clear">Clear</string>
+    <string-array name="length">
             <item>Miles</item>
             <item>Meters</item>
             <item>Yards</item>
