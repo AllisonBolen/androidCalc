@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -18,6 +20,7 @@ import android.support.design.widget.Snackbar;
 public class MainActivity extends AppCompatActivity {
     // internal
     public static final int SELECTION = 1;
+    public static final int HISTORY_RESULT = 2;
     public static boolean[] modeVal = {false}; // false = length | true = volume
 
     // ui vars
@@ -33,7 +36,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, Settings.class);
             startActivityForResult(intent, SELECTION);
             return true;
+        }else if(item.getItemId() == R.id.history_segue) {
+            Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
+            startActivityForResult(intent, HISTORY_RESULT );
+            return true;
         }
+
         return false;
     }
 
@@ -49,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
 
         clear.setOnClickListener(v -> {
             fromTextBox.setText("");
@@ -116,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
             TextView toView = findViewById(R.id.toUnitTextView);
             fromView.setText(data.getStringArrayExtra("FROM_SEL")[0]);
             toView.setText(data.getStringArrayExtra("TO_SEL")[0]);
+        }
+        if(resultCode == HISTORY_RESULT){
+
         }
     }
 }
