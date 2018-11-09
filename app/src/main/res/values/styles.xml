@@ -12,7 +12,7 @@
     </style>
 
     <!--<style name="ButtonColor" parent="@android:style/Widget.Button">-->
-        <!--<item name="android:background">@color/colorPrimary</item>-->
+    <!--<item name="android:background">@color/colorPrimary</item>-->
     <!--</style>-->
 
     <style name="AppTheme.NoActionBar">
