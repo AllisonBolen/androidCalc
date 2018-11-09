@@ -1,5 +1,6 @@
 package com.example.allisonbolen.calculatorandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.view.View;
 import com.example.allisonbolen.calculatorandroid.dummy.HistoryContent;
 
 public class HistoryActivity extends AppCompatActivity implements HistoryFragment.OnListFragmentInteractionListener{
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +33,12 @@ public class HistoryActivity extends AppCompatActivity implements HistoryFragmen
     @Override
     public void onListFragmentInteraction(HistoryContent.HistoryItem item){
         System.out.print("Interact");
+        Intent intent = new Intent();
+        String[] vals = {item.fromVal.toString(), item.toVal.toString(), item.mode, item.fromUnits, item.toUnits};
+        intent.putExtra("item", vals);
+        setResult(MainActivity.HISTORY_RESULT,intent);
+        finish();
+
     }
 
 }

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
@@ -14,7 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
+import com.example.allisonbolen.calculatorandroid.dummy.HistoryContent;
+
 import android.support.design.widget.Snackbar;
+
+import org.joda.time.DateTime;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +24,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int SELECTION = 1;
     public static final int HISTORY_RESULT = 2;
     public static boolean[] modeVal = {false}; // false = length | true = volume
+    public EditText fromTextBox;
+    public EditText toTextBox;
+    public TextView fromView;
+    public TextView toView;
 
     // ui vars
 
@@ -49,10 +55,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        EditText fromTextBox = findViewById(R.id.fromEditText);
-        final EditText toTextBox = findViewById(R.id.toEditText);
-        final TextView fromView = findViewById(R.id.fromUnitTextView);
-        TextView toView = findViewById(R.id.toUnitTextView);
+        fromTextBox = findViewById(R.id.fromEditText);
+        toTextBox = findViewById(R.id.toEditText);
+        fromView = findViewById(R.id.fromUnitTextView);
+        toView = findViewById(R.id.toUnitTextView);
         Button calc = findViewById(R.id.button4);
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
@@ -104,12 +110,19 @@ public class MainActivity extends AppCompatActivity {
                     VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
                     // value conversion
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Volume",
+                            to.toString(), from.toString(), DateTime.now());
+                    HistoryContent.addItem(item);
+
                     toTextBox.setText(String.valueOf(lenVal));
                 } else {
                     LengthUnits from = LengthUnits.valueOf(fromView.getText().toString());
                     LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
 
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Length",
+                            to.toString(), from.toString(), DateTime.now());
+                    HistoryContent.addItem(item);
                     toTextBox.setText(String.valueOf(lenVal));
                 }
 
@@ -121,13 +134,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == SELECTION){
-            TextView fromView = findViewById(R.id.fromUnitTextView);
-            TextView toView = findViewById(R.id.toUnitTextView);
             fromView.setText(data.getStringArrayExtra("FROM_SEL")[0]);
             toView.setText(data.getStringArrayExtra("TO_SEL")[0]);
         }
         if(resultCode == HISTORY_RESULT){
-
+            String[] vals = data.getStringArrayExtra("item");
+            this.fromTextBox.setText(vals[0]);
+            this.toTextBox.setText(vals[1]);
+            if(vals[2] == "length"){
+                boolean[] f = {false};
+                this.modeVal = f;
+            }
+            else {
+                boolean[] t = {true};
+                this.modeVal = t;
+            }
+            this.fromView.setText(vals[3]);
+            this.toView.setText(vals[4]);
         }
     }
 }
