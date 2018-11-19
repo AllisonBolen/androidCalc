@@ -1,6 +1,8 @@
 package com.example.allisonbolen.calculatorandroid.dummy;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,17 +37,28 @@ public class HistoryContent {
         public final String mode;
         public final String fromUnits;
         public final String toUnits;
+        public final String Key;
+        public final String timestamp;
 
-        public final DateTime timestamp;
-
+        public HistoryItem(){
+            this.fromVal = 5.5;
+            this.toVal = 0.0034175405;
+            this.mode = "Length";
+            this.fromUnits = "Meters";
+            this.toUnits = "Miles";
+            this.Key = "0";
+            this.timestamp = DateTime.now().toString();
+        }
         public HistoryItem(Double fromVal, Double toVal, String mode,
                            String fromUnits, String toUnits, DateTime timestamp) {
+           // DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
             this.fromVal = fromVal;
             this.toVal = toVal;
             this.mode = mode;
             this.fromUnits = fromUnits;
             this.toUnits = toUnits;
-            this.timestamp = timestamp;
+            this.timestamp = timestamp.toString();
+            this.Key = "1";
         }
 
         @Override

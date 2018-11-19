@@ -13,10 +13,15 @@ import android.widget.TextView;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
 import com.example.allisonbolen.calculatorandroid.dummy.HistoryContent;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.support.design.widget.Snackbar;
 
 import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,9 +33,14 @@ public class MainActivity extends AppCompatActivity {
     public EditText toTextBox;
     public TextView fromView;
     public TextView toView;
-
+    public DatabaseReference topRef;
+    public static List<HistoryContent.HistoryItem> allHistory;
     // ui vars
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        topRef = FirebaseDatabase.getInstance().getReference();
+    }
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -62,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
         Button calc = findViewById(R.id.button4);
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
+        allHistory = new ArrayList<HistoryContent.HistoryItem>();
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 
@@ -111,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     // value conversion
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
                     HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Volume",
-                            to.toString(), from.toString(), DateTime.now());
+                            from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
 
                     toTextBox.setText(String.valueOf(lenVal));
@@ -121,8 +132,9 @@ public class MainActivity extends AppCompatActivity {
 
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
                     HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Length",
-                            to.toString(), from.toString(), DateTime.now());
+                            from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
+                    topRef.push().setValue(item);
                     toTextBox.setText(String.valueOf(lenVal));
                 }
 
