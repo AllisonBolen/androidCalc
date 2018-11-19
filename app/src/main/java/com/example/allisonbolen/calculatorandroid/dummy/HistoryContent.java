@@ -1,6 +1,8 @@
 package com.example.allisonbolen.calculatorandroid.dummy;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,15 +21,6 @@ public class HistoryContent {
     public static void addItem(HistoryItem item) {
         ITEMS.add(item);
     }
-    static {
-        DateTime now = DateTime.now();
-        addItem(new HistoryItem(2.0, 1.829, "Length", "Yards", "Meters", now.minusDays(1)));
-        addItem(new HistoryItem(1.0, 3.785, "Volume", "Gallons", "Liters", now.minusDays(1)));
-        addItem(new HistoryItem(2.0, 1.829, "Length", "Yards", "Meters", now.plusDays(1)));
-        addItem(new HistoryItem(1.0, 3.785, "Volume", "Gallons", "Liters", now.plusDays(1)));
-    }
-
-
 
     public static class HistoryItem {
         public final Double fromVal;
@@ -35,17 +28,28 @@ public class HistoryContent {
         public final String mode;
         public final String fromUnits;
         public final String toUnits;
+        public  String _key;
+        public final String timestamp;
 
-        public final DateTime timestamp;
-
+        public HistoryItem(){
+            this.fromVal = 5.5;
+            this.toVal = 0.0034175405;
+            this.mode = "Length";
+            this.fromUnits = "Meters";
+            this.toUnits = "Miles";
+            this._key = "0";
+            this.timestamp = DateTime.now().toString();
+        }
         public HistoryItem(Double fromVal, Double toVal, String mode,
                            String fromUnits, String toUnits, DateTime timestamp) {
+           // DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd");
             this.fromVal = fromVal;
             this.toVal = toVal;
             this.mode = mode;
             this.fromUnits = fromUnits;
             this.toUnits = toUnits;
-            this.timestamp = timestamp;
+            this.timestamp = timestamp.toString();
+            this._key = "1";
         }
 
         @Override
