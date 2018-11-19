@@ -21,10 +21,10 @@ public class HistoryContent {
     }
     static {
         DateTime now = DateTime.now();
-        addItem(new HistoryItem(2.0, 1.829, "Length", "Yards", "Meters", now.minusDays(1)));
-        addItem(new HistoryItem(1.0, 3.785, "Volume", "Gallons", "Liters", now.minusDays(1)));
-        addItem(new HistoryItem(2.0, 1.829, "Length", "Yards", "Meters", now.plusDays(1)));
-        addItem(new HistoryItem(1.0, 3.785, "Volume", "Gallons", "Liters", now.plusDays(1)));
+        addItem(new HistoryItem(2.0, 1.829, false, "Yards", "Meters", now.minusDays(1)));
+        addItem(new HistoryItem(1.0, 3.785, true, "Gallons", "Liters", now.minusDays(1)));
+        addItem(new HistoryItem(2.0, 1.829, false, "Yards", "Meters", now.plusDays(1)));
+        addItem(new HistoryItem(1.0, 3.785, true, "Gallons", "Liters", now.plusDays(1)));
     }
 
 
@@ -32,13 +32,13 @@ public class HistoryContent {
     public static class HistoryItem {
         public final Double fromVal;
         public final Double toVal;
-        public final String mode;
+        public final boolean mode;
         public final String fromUnits;
         public final String toUnits;
 
         public final DateTime timestamp;
 
-        public HistoryItem(Double fromVal, Double toVal, String mode,
+        public HistoryItem(Double fromVal, Double toVal, boolean mode,
                            String fromUnits, String toUnits, DateTime timestamp) {
             this.fromVal = fromVal;
             this.toVal = toVal;

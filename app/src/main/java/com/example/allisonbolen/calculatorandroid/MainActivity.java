@@ -110,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
                     VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
                     // value conversion
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
-                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Volume",
-                            to.toString(), from.toString(), DateTime.now());
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, modeVal[0],
+                            from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
 
                     toTextBox.setText(String.valueOf(lenVal));
@@ -120,8 +120,8 @@ public class MainActivity extends AppCompatActivity {
                     LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
 
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
-                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Length",
-                            to.toString(), from.toString(), DateTime.now());
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, modeVal[0],
+                            from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
                     toTextBox.setText(String.valueOf(lenVal));
                 }
@@ -141,16 +141,17 @@ public class MainActivity extends AppCompatActivity {
             String[] vals = data.getStringArrayExtra("item");
             this.fromTextBox.setText(vals[0]);
             this.toTextBox.setText(vals[1]);
-            if(vals[2] == "length"){
-                boolean[] f = {false};
-                this.modeVal = f;
-            }
-            else {
-                boolean[] t = {true};
-                this.modeVal = t;
-            }
-            this.fromView.setText(vals[3]);
-            this.toView.setText(vals[4]);
+            this.modeVal[0] = data.getBooleanExtra("mode", this.modeVal[0]);
+//            if(vals[2] == "Length"){
+//                boolean[] f = {false};
+//                this.modeVal = f;
+//            }
+//            else if(vals[2] == "Volume"){
+//                boolean[] t = {true};
+//                this.modeVal = t;
+//            }
+            this.fromView.setText(vals[2]);
+            this.toView.setText(vals[3]);
         }
     }
 }

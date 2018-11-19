@@ -103,7 +103,7 @@ public class HistoryAdapter extends
          holder.mItem = this.dayValues.get(this.sectionHeaders.get(section)).get(position);
          holder.mP1.setText(holder.mItem.toString());
          holder.mDateTime.setText(holder.mItem.timestamp.toString());
-         if (holder.mItem.mode.equals("Length")) {
+         if (!holder.mItem.mode) {
              // length icon
              holder.mImage.setImageDrawable(holder.mImage.getResources().getDrawable(R.drawable.length_icon));
          } else {
