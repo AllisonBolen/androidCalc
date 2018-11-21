@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
             String[] vals = data.getStringArrayExtra("item");
             this.fromTextBox.setText(vals[0]);
             this.toTextBox.setText(vals[1]);
-            if(vals[2] == "length"){
+            if(vals[2].equals("length")){
                 boolean[] f = {false};
                 this.modeVal = f;
             }
