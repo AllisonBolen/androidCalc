@@ -1,14 +1,19 @@
 package com.example.allisonbolen.calculatorandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
@@ -23,8 +28,11 @@ import android.support.design.widget.Snackbar;
 
 import org.joda.time.DateTime;
 
+import webservice.WeatherService;
 import java.util.ArrayList;
 import java.util.List;
+
+import static webservice.WeatherService.BROADCAST_WEATHER;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     public EditText toTextBox;
     public TextView fromView;
     public TextView toView;
+    public TextView current;
+    public TextView temperature;
+    public ImageView weatherIcon;
+
     public DatabaseReference topRef;
     public static List<HistoryContent.HistoryItem> allHistory;
     // ui vars
@@ -45,12 +57,17 @@ public class MainActivity extends AppCompatActivity {
         allHistory.clear();
         topRef = FirebaseDatabase.getInstance().getReference("history");
         topRef.addChildEventListener (chEvListener);
+
+        IntentFilter weatherFilter = new IntentFilter(BROADCAST_WEATHER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(weatherReceiver, weatherFilter);
     }
 
     @Override
     public void onPause(){
         super.onPause();
         topRef.removeEventListener(chEvListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(weatherReceiver);
+
     }
 
 
@@ -124,6 +141,9 @@ public class MainActivity extends AppCompatActivity {
         allHistory = new ArrayList<HistoryContent.HistoryItem>();
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        current = findViewById(R.id.current);
+        temperature = findViewById(R.id.temperature);
+        weatherIcon = findViewById(R.id.weatherIcon);
 
         clear.setOnClickListener(v -> {
             fromTextBox.setText("");
@@ -146,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
         // calcualte method
         calc.setOnClickListener(v -> {
+            WeatherService.startGetWeather(this, "42.963686", "-85.888595", "p1");
             double fromVal = -1;
             double toVal = -1;
             // test for blank input
@@ -170,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
                     // value conversion
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
+
                     HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Volume",
                             from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
@@ -180,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                     LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
 
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
+
                     HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Length",
                             from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
@@ -192,6 +215,31 @@ public class MainActivity extends AppCompatActivity {
             mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
         });
     }
+
+    private BroadcastReceiver weatherReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("TAG", "onReceive: " + intent);
+            Bundle bundle = intent.getExtras();
+            double temp = bundle.getDouble("temp");
+            String summary = bundle.getString("summary");
+            String icon;
+            try {
+                icon = bundle.getString("icon").replaceAll("-", "_");
+            }catch( NullPointerException e ){
+                icon = bundle.getString("icon");
+            }
+//            icon = icon + ".png";
+            String key = bundle.getString("KEY");
+            int resID = getResources().getIdentifier(icon , "drawable", getPackageName());
+            //setWeatherViews(View.VISIBLE);
+            if (key.equals("p1"))  {
+                current.setText(summary);
+                temperature.setText(Double.toString(temp));
+                weatherIcon.setImageResource(resID);
+            }
+        }
+    };
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == SELECTION){
@@ -202,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
             String[] vals = data.getStringArrayExtra("item");
             this.fromTextBox.setText(vals[0]);
             this.toTextBox.setText(vals[1]);
+
             if(vals[2].equals("length")){
                 boolean[] f = {false};
                 this.modeVal = f;
