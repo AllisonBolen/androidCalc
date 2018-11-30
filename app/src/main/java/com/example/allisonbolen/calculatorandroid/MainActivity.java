@@ -1,14 +1,17 @@
 package com.example.allisonbolen.calculatorandroid;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
@@ -17,6 +20,8 @@ import com.example.allisonbolen.calculatorandroid.dummy.HistoryContent;
 import android.support.design.widget.Snackbar;
 
 import org.joda.time.DateTime;
+
+import webservice.WeatherService;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     public EditText toTextBox;
     public TextView fromView;
     public TextView toView;
+    public TextView current;
+    public TextView temperature;
+    public ImageView weatherIcon;
 
     // ui vars
 
@@ -64,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
         Button mode = findViewById(R.id.button3);
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
+        current = findViewById(R.id.current);
+        temperature = findViewById(R.id.temperature);
+        weatherIcon = findViewById(R.id.weatherIcon);
 
         clear.setOnClickListener(v -> {
             fromTextBox.setText("");
@@ -86,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         // calcualte method
         calc.setOnClickListener(v -> {
+            WeatherService.startGetWeather(this, "42.963686", "-85.888595", "p1");
             double fromVal = -1;
             double toVal = -1;
             // test for blank input
@@ -131,6 +143,25 @@ public class MainActivity extends AppCompatActivity {
             mgr.hideSoftInputFromWindow(fromTextBox.getWindowToken(), 0);
         });
     }
+
+    private BroadcastReceiver weatherReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("TAG", "onReceive: " + intent);
+            Bundle bundle = intent.getExtras();
+            double temp = bundle.getDouble("TEMPERATURE");
+            String summary = bundle.getString("SUMMARY");
+            String icon = bundle.getString("ICON").replaceAll("-", "_");
+            String key = bundle.getString("KEY");
+            int resID = getResources().getIdentifier(icon , "drawable", getPackageName());
+            //setWeatherViews(View.VISIBLE);
+            if (key.equals("p1"))  {
+                current.setText(summary);
+                temperature.setText(Double.toString(temp));
+                weatherIcon.setImageResource(resID);
+            }
+        }
+    };
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(resultCode == SELECTION){
