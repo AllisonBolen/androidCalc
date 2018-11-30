@@ -3,7 +3,9 @@ package com.example.allisonbolen.calculatorandroid;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +32,8 @@ import webservice.WeatherService;
 import java.util.ArrayList;
 import java.util.List;
 
+import static webservice.WeatherService.BROADCAST_WEATHER;
+
 
 public class MainActivity extends AppCompatActivity {
     // internal
@@ -53,12 +57,17 @@ public class MainActivity extends AppCompatActivity {
         allHistory.clear();
         topRef = FirebaseDatabase.getInstance().getReference("history");
         topRef.addChildEventListener (chEvListener);
+
+        IntentFilter weatherFilter = new IntentFilter(BROADCAST_WEATHER);
+        LocalBroadcastManager.getInstance(this).registerReceiver(weatherReceiver, weatherFilter);
     }
 
     @Override
     public void onPause(){
         super.onPause();
         topRef.removeEventListener(chEvListener);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(weatherReceiver);
+
     }
 
 
@@ -212,9 +221,15 @@ public class MainActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             Log.d("TAG", "onReceive: " + intent);
             Bundle bundle = intent.getExtras();
-            double temp = bundle.getDouble("TEMPERATURE");
-            String summary = bundle.getString("SUMMARY");
-            String icon = bundle.getString("ICON").replaceAll("-", "_");
+            double temp = bundle.getDouble("temp");
+            String summary = bundle.getString("summary");
+            String icon;
+            try {
+                icon = bundle.getString("icon").replaceAll("-", "_");
+            }catch( NullPointerException e ){
+                icon = bundle.getString("icon");
+            }
+//            icon = icon + ".png";
             String key = bundle.getString("KEY");
             int resID = getResources().getIdentifier(icon , "drawable", getPackageName());
             //setWeatherViews(View.VISIBLE);

@@ -102,8 +102,8 @@ public class HistoryAdapter extends
      protected void onBindItemViewHolder(ViewHolder holder, int section, int position) {
          holder.mItem = this.dayValues.get(this.sectionHeaders.get(section)).get(position);
          holder.mP1.setText(holder.mItem.toString());
-         holder.mDateTime.setText(holder.mItem.timestamp.toString());
-         if (!holder.mItem.mode) {
+         holder.mDateTime.setText(holder.mItem.timestamp);
+         if (holder.mItem.mode.equals("Length")) {
              // length icon
              holder.mImage.setImageDrawable(holder.mImage.getResources().getDrawable(R.drawable.length_icon));
          } else {

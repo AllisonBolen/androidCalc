@@ -95,14 +95,14 @@ public class WeatherService extends IntentService {
                 JSONObject current = data.getJSONObject("currently");
 
                 // TODO: extract the values you need out of current
-                String image = current.getJSONObject("icon").toString();
-                String temp = current.getJSONObject("temperature").toString();
-                String summary = current.getJSONObject("summary").toString();
+                String image = current.getString("icon");
+                Double temp = current.getDouble("temperature");
+                String summary = current.getString("summary");
                 Intent result = new Intent(BROADCAST_WEATHER);
 
                 // TODO: use putExtra to add the extracted values to your broadcast
                 result.putExtra("temp", temp);
-                result.putExtra("image", image);
+                result.putExtra("icon", image);
                 result.putExtra("summary", summary);
                 result.putExtra("KEY", key);
                 LocalBroadcastManager.getInstance(this).sendBroadcast(result);
