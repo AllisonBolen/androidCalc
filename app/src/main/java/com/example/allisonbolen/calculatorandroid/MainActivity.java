@@ -16,12 +16,19 @@ import android.widget.TextView;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.LengthUnits;
 import com.example.allisonbolen.calculatorandroid.UnitsConverter.VolumeUnits;
 import com.example.allisonbolen.calculatorandroid.dummy.HistoryContent;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import android.support.design.widget.Snackbar;
 
 import org.joda.time.DateTime;
 
 import webservice.WeatherService;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,7 +44,22 @@ public class MainActivity extends AppCompatActivity {
     public TextView temperature;
     public ImageView weatherIcon;
 
+    public DatabaseReference topRef;
+    public static List<HistoryContent.HistoryItem> allHistory;
     // ui vars
+    @Override
+    public void onResume(){
+        super.onResume();
+        allHistory.clear();
+        topRef = FirebaseDatabase.getInstance().getReference("history");
+        topRef.addChildEventListener (chEvListener);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        topRef.removeEventListener(chEvListener);
+    }
 
 
     @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,6 +81,43 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+    private ChildEventListener chEvListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            HistoryContent.HistoryItem entry =
+                    (HistoryContent.HistoryItem) dataSnapshot.getValue(HistoryContent.HistoryItem.class);
+            entry._key = dataSnapshot.getKey();
+            allHistory.add(entry);
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            HistoryContent.HistoryItem entry =
+                    (HistoryContent.HistoryItem) dataSnapshot.getValue(HistoryContent.HistoryItem.class);
+            List<HistoryContent.HistoryItem> newHistory = new ArrayList<HistoryContent.HistoryItem>();
+            for (HistoryContent.HistoryItem t : allHistory) {
+                if (!t._key.equals(dataSnapshot.getKey())) {
+                    newHistory.add(t);
+                }
+            }
+            allHistory = newHistory;
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         Button calc = findViewById(R.id.button4);
         Button clear = findViewById(R.id.button5);
         Button mode = findViewById(R.id.button3);
+        allHistory = new ArrayList<HistoryContent.HistoryItem>();
         InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         current = findViewById(R.id.current);
@@ -122,7 +182,8 @@ public class MainActivity extends AppCompatActivity {
                     VolumeUnits to = VolumeUnits.valueOf(toView.getText().toString());
                     // value conversion
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
-                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, modeVal[0],
+
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Volume",
                             from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
 
@@ -132,9 +193,11 @@ public class MainActivity extends AppCompatActivity {
                     LengthUnits to = LengthUnits.valueOf(toView.getText().toString());
 
                     double lenVal = UnitsConverter.convert(fromVal, from, to);
-                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, modeVal[0],
+
+                    HistoryContent.HistoryItem item = new HistoryContent.HistoryItem(fromVal, lenVal, "Length",
                             from.toString(), to.toString(), DateTime.now());
                     HistoryContent.addItem(item);
+                    topRef.push().setValue(item);
                     toTextBox.setText(String.valueOf(lenVal));
                 }
 
@@ -172,17 +235,17 @@ public class MainActivity extends AppCompatActivity {
             String[] vals = data.getStringArrayExtra("item");
             this.fromTextBox.setText(vals[0]);
             this.toTextBox.setText(vals[1]);
-            this.modeVal[0] = data.getBooleanExtra("mode", this.modeVal[0]);
-//            if(vals[2] == "Length"){
-//                boolean[] f = {false};
-//                this.modeVal = f;
-//            }
-//            else if(vals[2] == "Volume"){
-//                boolean[] t = {true};
-//                this.modeVal = t;
-//            }
-            this.fromView.setText(vals[2]);
-            this.toView.setText(vals[3]);
+
+            if(vals[2].equals("length")){
+                boolean[] f = {false};
+                this.modeVal = f;
+            }
+            else {
+                boolean[] t = {true};
+                this.modeVal = t;
+            }
+            this.fromView.setText(vals[3]);
+            this.toView.setText(vals[4]);
         }
     }
 }
